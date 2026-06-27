@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STK Commons Co — Document Catalog</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --crimson: #8B1A1A;
+    --crimson-light: #FAECEC;
+    --crimson-mid: #C0392B;
+    --navy: #1B3A6B;
+    --navy-light: #E8EDF5;
+    --teal: #1A6B5A;
+    --teal-light: #E8F5F1;
+    --amber: #B85A00;
+    --amber-light: #FFF3E6;
+    --gold: #8B6914;
+    --gold-light: #FDF6E3;
+    --purple: #4A1A6B;
+    --purple-light: #F0E8F5;
+    --text: #1A1A1A;
+    --text-secondary: #5A5A5A;
+    --border: #E0E0E0;
+    --bg: #FAFAF8;
+    --white: #FFFFFF;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --shadow-hover: 0 6px 24px rgba(0,0,0,0.14);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--navy);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .header-brand {
+    display: flex;
+    flex-direction: column;
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFFFFF;
+    letter-spacing: 0.02em;
+  }
+  .header-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 2px;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.18s;
+  }
+  .btn-primary {
+    background: var(--crimson);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--crimson-mid); transform: translateY(-1px); }
+  .btn-ghost {
+    background: rgba(255,255,255,0.12);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.2); }
+  .btn-sm {
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+  }
+
+  /* MAIN LAYOUT */
+  .main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: sticky;
+    top: 80px;
+  }
+  .sidebar-section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+  .search-input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .search-input:focus { border-color: var(--navy); }
+
+  .filter-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 8px 12px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .filter-btn:hover { background: var(--navy-light); color: var(--navy); }
+  .filter-btn.active { background: var(--navy); color: white; font-weight: 500; }
+  .filter-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .filter-count {
+    margin-left: auto;
+    font-size: 11px;
+    opacity: 0.7;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .stat-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--crimson);
+  }
+  .stat-lbl {
+    font-size: 10px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+  }
+
+  /* CONTENT */
+  .content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .content-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .content-count {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* DOCUMENT CARDS */
+  .doc-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+    transition: all 0.2s;
+    cursor: pointer;
+    border-left: 4px solid transparent;
+  }
+  .doc-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+  }
+  .doc-card.expanded { border-left-color: var(--navy); }
+
+  .doc-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .doc-icon {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .doc-meta { flex: 1; min-width: 0; }
+  .doc-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .doc-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .badge {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+  .doc-filename {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+  .doc-expand-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 18px;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .doc-expand-btn:hover { background: var(--bg); color: var(--navy); }
+
+  .doc-summary {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .doc-detail {
+    display: none;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .doc-card.expanded .doc-detail { display: block; }
+
+  .detail-section {
+    margin-bottom: 14px;
+  }
+  .detail-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .detail-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .source-list {
+    list-style: none;
+    padding: 0;
+  }
+  .source-list li {
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 4px 0;
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .source-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--crimson);
+    font-size: 11px;
+  }
+  .pillar-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .pillar-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    background: var(--navy-light);
+    color: var(--navy);
+    font-weight: 500;
+  }
+
+  /* MODAL — ADD DOCUMENT */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 28px;
+    width: 560px;
+    max-width: 95vw;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 20px;
+  }
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--navy);
+  }
+  .form-textarea { resize: vertical; min-height: 80px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .modal-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .btn-cancel {
+    background: var(--bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+  .btn-cancel:hover { background: var(--border); }
+
+  /* EMPTY STATE */
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+  }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-text { font-size: 15px; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--navy);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 300;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* EXPORT BTN */
+  .export-section {
+    background: var(--gold-light);
+    border: 1px solid #E8D5A0;
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+  .export-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .export-btn {
+    width: 100%;
+    padding: 8px;
+    background: var(--gold);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .export-btn:hover { background: var(--amber); }
+
+  @media (max-width: 768px) {
+    .main { grid-template-columns: 1fr; padding: 16px; }
+    .sidebar { position: static; }
+    .header-inner { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="header-title">STK Commons Co — Document Catalog</div>
+      <div class="header-sub">AGI Commons Initiative · Stealth Phase · Controlled Distribution</div>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-ghost btn-sm" onclick="exportJSON()">Export JSON</button>
+      <button class="btn btn-primary" onclick="openModal()">+ Add Document</button>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Search</div>
+      <input class="search-input" type="text" placeholder="Title, filename, content…" id="searchInput" oninput="renderDocs()">
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Filter by Category</div>
+      <button class="filter-btn active" data-cat="all" onclick="setFilter('all')">
+        <span class="filter-dot" style="background:#1B3A6B"></span>
+        All Documents
+        <span class="filter-count" id="count-all"></span>
+      </button>
+      <button class="filter-btn" data-cat="manifesto" onclick="setFilter('manifesto')">
+        <span class="filter-dot" style="background:#8B1A1A"></span>
+        Core Manifesto
+        <span class="filter-count" id="count-manifesto"></span>
+      </button>
+      <button class="filter-btn" data-cat="counter" onclick="setFilter('counter')">
+        <span class="filter-dot" style="background:#B85A00"></span>
+        Counter-Manifestos
+        <span class="filter-count" id="count-counter"></span>
+      </button>
+      <button class="filter-btn" data-cat="addendum" onclick="setFilter('addendum')">
+        <span class="filter-dot" style="background:#1A6B5A"></span>
+        Addenda
+        <span class="filter-count" id="count-addendum"></span>
+      </button>
+      <button class="filter-btn" data-cat="organizational" onclick="setFilter('organizational')">
+        <span class="filter-dot" style="background:#4A1A6B"></span>
+        Organizational
+        <span class="filter-count" id="count-organizational"></span>
+      </button>
+      <button class="filter-btn" data-cat="coalition" onclick="setFilter('coalition')">
+        <span class="filter-dot" style="background:#1B3A6B"></span>
+        Coalition
+        <span class="filter-count" id="count-coalition"></span>
+      </button>
+      <button class="filter-btn" data-cat="media" onclick="setFilter('media')">
+        <span class="filter-dot" style="background:#8B6914"></span>
+        Film & Media
+        <span class="filter-count" id="count-media"></span>
+      </button>
+      <button class="filter-btn" data-cat="other" onclick="setFilter('other')">
+        <span class="filter-dot" style="background:#5A5A5A"></span>
+        Other
+        <span class="filter-count" id="count-other"></span>
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Catalog Statistics</div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-num" id="stat-total">0</div>
+          <div class="stat-lbl">Documents</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-complete">0</div>
+          <div class="stat-lbl">Complete</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-sources">0</div>
+          <div class="stat-lbl">Sources</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-cats">0</div>
+          <div class="stat-lbl">Categories</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="export-section">
+      <div class="export-title">Backup & Export</div>
+      <button class="export-btn" onclick="exportJSON()">Download Catalog as JSON</button>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <main>
+    <div class="content-header">
+      <div class="content-title" id="contentTitle">All Documents</div>
+      <div class="content-count" id="contentCount"></div>
+    </div>
+    <div id="docList"></div>
+  </main>
+</div>
+
+<!-- ADD DOCUMENT MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-title">Add New Document</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Title *</label>
+        <input class="form-input" id="f-title" placeholder="Document title">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Filename</label>
+        <input class="form-input" id="f-filename" placeholder="filename.docx">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Category *</label>
+        <select class="form-select" id="f-category">
+          <option value="manifesto">Core Manifesto</option>
+          <option value="counter">Counter-Manifesto</option>
+          <option value="addendum">Addendum</option>
+          <option value="organizational">Organizational</option>
+          <option value="coalition">Coalition</option>
+          <option value="media">Film & Media</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input class="form-input" id="f-date" type="month" value="2026-06">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-select" id="f-status">
+          <option value="complete">Complete</option>
+          <option value="draft">Draft</option>
+          <option value="pending">Pending</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Distribution</label>
+        <select class="form-select" id="f-distribution">
+          <option value="controlled">Controlled</option>
+          <option value="board">Board Only</option>
+          <option value="public">Public</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Summary</label>
+      <textarea class="form-textarea" id="f-summary" placeholder="Brief description of the document's purpose and content…"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Contents / Sections</label>
+      <textarea class="form-textarea" id="f-contents" placeholder="Key sections, arguments, or components…"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Source Material (one per line)</label>
+      <textarea class="form-textarea" id="f-sources" placeholder="Atlantic article on Anthropic-Pentagon dispute, June 2026&#10;Timothy Snyder, On Freedom&#10;Amnesty International Minab report…"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Framework Pillars (comma separated)</label>
+      <input class="form-input" id="f-pillars" placeholder="AI Dividend, Governance Charter, Automation Tax…">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes</label>
+      <textarea class="form-textarea" id="f-notes" placeholder="Any additional context, status notes, or connections to other documents…" style="min-height:60px"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveDocument()">Save Document</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CATEGORY CONFIG ──────────────────────────────────────────────────────────
+const CAT = {
+  manifesto:      { label: 'Core Manifesto',    color: '#8B1A1A', bg: '#FAECEC', icon: '📜' },
+  counter:        { label: 'Counter-Manifesto', color: '#B85A00', bg: '#FFF3E6', icon: '⚖️' },
+  addendum:       { label: 'Addendum',          color: '#1A6B5A', bg: '#E8F5F1', icon: '📎' },
+  organizational: { label: 'Organizational',    color: '#4A1A6B', bg: '#F0E8F5', icon: '🏛️' },
+  coalition:      { label: 'Coalition',         color: '#1B3A6B', bg: '#E8EDF5', icon: '🤝' },
+  media:          { label: 'Film & Media',      color: '#8B6914', bg: '#FDF6E3', icon: '🎬' },
+  other:          { label: 'Other',             color: '#5A5A5A', bg: '#F5F5F5', icon: '📁' },
+};
+
+const STATUS = {
+  complete: { label: 'Complete', color: '#1A6B5A', bg: '#E8F5F1' },
+  draft:    { label: 'Draft',    color: '#B85A00', bg: '#FFF3E6' },
+  pending:  { label: 'Pending',  color: '#5A5A5A', bg: '#F5F5F5' },
+};
+
+const DIST = {
+  controlled: { label: 'Controlled Distribution', color: '#8B1A1A', bg: '#FAECEC' },
+  board:      { label: 'Board Only',               color: '#4A1A6B', bg: '#F0E8F5' },
+  public:     { label: 'Public',                   color: '#1A6B5A', bg: '#E8F5F1' },
+};
+
+// ── INITIAL DATA ─────────────────────────────────────────────────────────────
+const INITIAL_DOCS = [
+  {
+    id: 1, title: "AGI Commons Manifesto", filename: "agi_commons_manifesto.docx",
+    category: "manifesto", date: "2026-03", status: "complete", distribution: "controlled",
+    summary: "The foundational intellectual document of the AGI Commons Initiative. Eight-part framework organized around six economic layers: AI dividend, governance charter, automation tax, civic infrastructure, country readiness analysis, and climate section.",
+    contents: "Part I: The Case for the Commons; Part II: The AI Dividend; Part III: Governance Charter; Part IV: The Automation Tax; Part V: Civic Infrastructure; Part VI: Country Readiness; Part VII: Climate and AGI; Part VIII: The Path Forward",
+    sources: ["Economic history of commons governance frameworks", "Automation and labor displacement research", "International AI governance proposals 2023–2025", "Keynes, General Theory (structural precedent)", "Universal Declaration of Human Rights (governance model)"],
+    pillars: ["AI Dividend", "Governance Charter", "Automation Tax", "Civic Infrastructure", "Country Readiness", "Climate Governance"],
+    notes: "Core document from which all other founding package documents derive. Eight parts, six economic layers. Translations completed in Bulgarian; Russian and Polish pending."
+  },
+  {
+    id: 2, title: "The Simple Version", filename: "the_simple_version.docx",
+    category: "manifesto", date: "2026-03", status: "complete", distribution: "controlled",
+    summary: "Plain language guide to the AGI Commons framework. Written for general audiences without academic or policy background. Held for release until institutional footing is established.",
+    contents: "Accessible restatement of all six economic layers; plain language explanation of the automation tax and AI dividend; why this matters to ordinary people",
+    sources: ["AGI Commons Manifesto (primary source)", "Plain language writing standards"],
+    pillars: ["AI Dividend", "Automation Tax"],
+    notes: "NOT for public release until STK Commons Co has institutional footing. Held in controlled distribution."
+  },
+  {
+    id: 3, title: "Manifesto Suite Summary", filename: "manifesto_suite_summary.docx",
+    category: "manifesto", date: "2026-03", status: "complete", distribution: "controlled",
+    summary: "Summary document with selected quotes from the full manifesto suite. Designed for rapid orientation of board candidates and coalition affiliates.",
+    contents: "Selected quotes from all eight manifesto parts; key framework principles; selected quotes from counter-manifesto documents",
+    sources: ["AGI Commons Manifesto", "Three counter-manifesto documents"],
+    pillars: ["AI Dividend", "Governance Charter", "Automation Tax", "Civic Infrastructure", "Country Readiness", "Climate Governance"],
+    notes: "Designed as a companion to the full manifesto suite, not a replacement."
+  },
+  {
+    id: 4, title: "The Rising Tide Manifesto", filename: "rising_tide_manifesto.docx",
+    category: "counter", date: "2026-03", status: "complete", distribution: "controlled",
+    summary: "Counter-manifesto presenting the strongest case for market-distribution arguments: that AGI's benefits will naturally flow broadly through productivity gains and reduced costs, without requiring governance intervention.",
+    contents: "Historical precedents for technology-driven broad prosperity; market efficiency arguments; response to the commons framework from the market perspective",
+    sources: ["Market economics literature", "Technology diffusion research", "Historical productivity studies"],
+    pillars: ["AI Dividend", "Automation Tax"],
+    notes: "Written to steelman the opposition. Essential preparation for board and coalition conversations."
+  },
+  {
+    id: 5, title: "The Sovereign Nations Manifesto", filename: "sovereign_nations_manifesto.docx",
+    category: "counter", date: "2026-03", status: "complete", distribution: "controlled",
+    summary: "Counter-manifesto presenting the national sovereignty argument: that AGI governance must remain within national jurisdictions and that international commons frameworks represent an unacceptable transfer of sovereignty.",
+    contents: "National sovereignty doctrine applied to AI; arguments against multilateral AI governance; response to commons framework from nationalist perspective",
+    sources: ["International relations sovereignty literature", "National AI strategy documents", "Timothy Snyder, On Freedom (sovereignty analysis)"],
+    pillars: ["Governance Charter", "Country Readiness"],
+    notes: "Directly relevant to coalition building with non-Western democracies."
+  },
+  {
+    id: 6, title: "The Full Speed Manifesto", filename: "full_speed_manifesto.docx",
+    category: "counter", date: "2026-03", status: "complete", distribution: "controlled",
+    summary: "Counter-manifesto presenting the accelerationist argument: that governance constraints slow AI development and thereby delay the enormous benefits AGI could deliver to humanity.",
+    contents: "Accelerationist case for minimal AI governance; argument that speed of deployment is itself an ethical imperative; response to commons framework from accelerationist perspective",
+    sources: ["Effective accelerationism literature", "AI capability research timelines", "Economic modeling of delayed deployment costs"],
+    pillars: ["Governance Charter"],
+    notes: "Strongest challenge to the commons timeline argument. Board members need to be able to respond to this confidently."
+  },
+  {
+    id: 7, title: "Document F: Geopolitical Addendum to the AGI Commons Manifesto", filename: "geopolitical_addendum.docx",
+    category: "addendum", date: "2026-04", status: "complete", distribution: "controlled",
+    summary: "The geopolitical and military dimension of the AGI Commons framework. Addresses military AI governance as the central ungoverned problem of the AI era. Identifies three geopolitical traps, the Geneva Convention gap, and information warfare threats.",
+    contents: "Three Geopolitical Traps (sovereignty paradox, defection incentive, techno-nationalism); The Military AI Problem (separability problem, Geneva Convention gap, three framework levers); Information Warfare Threat (synthetic media, personalized propaganda, coordinated inauthentic behavior); Coalition of Democracies strategy",
+    sources: ["Geneva Convention and international humanitarian law", "Autonomous weapons research literature", "Military AI deployment reports 2023–2025", "Information warfare and election interference studies", "Timothy Snyder, On Freedom"],
+    pillars: ["Governance Charter", "Country Readiness", "Civic Infrastructure"],
+    notes: "Paired with Geopolitical Postscript 2026. Read together they form a complete arc: prediction followed by vindication."
+  },
+  {
+    id: 8, title: "Geopolitical Addendum Postscript: 2026 and the Proof of Concept", filename: "geopolitical_postscript_2026.docx",
+    category: "addendum", date: "2026-06", status: "complete", distribution: "controlled",
+    summary: "Supplement to Document F documenting the Anthropic-Pentagon dispute, Venezuela operation, OpenAI gap-fill, and Minab strike as vindication of the framework's prior analysis. Names three lessons and introduces the Minab Doctrine.",
+    contents: "What Happened (Venezuela, the ultimatum, Minab); Three Lessons table (Private Ethics Ceiling, Race to the Bottom, Accountability Vacuum); What This Means for the Framework; Economic Justice Dimension of Military AI; The Framework Stands",
+    sources: ["The Atlantic, Anthropic-Pentagon dispute coverage, June 2026", "Bloomberg interview with Dario Amodei, June 2026", "Amnesty International Minab strike report 2026", "Human Rights Watch Minab investigation 2026", "Federal court ruling on Pentagon supply-chain designation 2026", "OpenAI Pentagon contract reporting 2026"],
+    pillars: ["Governance Charter", "AI Dividend", "Country Readiness"],
+    notes: "Introduces the Minab Doctrine: any AI system in a lethal decision chain must carry a traceable, enforceable chain of human accountability from deployment to consequence. Pairs with Document F."
+  },
+  {
+    id: 9, title: "Religious Addendum", filename: "religious_addendum.docx",
+    category: "addendum", date: "2026-04", status: "complete", distribution: "controlled",
+    summary: "Addresses faith traditions and AI governance. Connects the AGI Commons framework to religious and spiritual traditions' teachings on stewardship, justice, and the common good.",
+    contents: "Faith traditions on stewardship and commons; religious arguments for economic justice in AGI governance; coalition-building with faith-based organizations",
+    sources: ["Catholic social teaching on the common good", "Protestant stewardship theology", "Islamic economic justice principles", "Buddhist perspectives on technology and suffering", "Indigenous spiritual traditions on commons stewardship"],
+    pillars: ["AI Dividend", "Civic Infrastructure", "Country Readiness"],
+    notes: "Important for coalition outreach to faith-based organizations."
+  },
+  {
+    id: 10, title: "Colorado Articles of Incorporation — STK Commons Co", filename: "articles_of_incorporation.docx",
+    category: "organizational", date: "2026-02", status: "complete", distribution: "board",
+    summary: "Legal formation document for STK Commons Co, a Colorado-registered nonprofit organization. Establishes the legal entity and its foundational purpose.",
+    contents: "Corporate name and purpose; registered agent; initial board structure; nonprofit status provisions; dissolution clause",
+    sources: ["Colorado Revised Nonprofit Corporation Act", "IRS 501(c)(3) requirements"],
+    pillars: ["Governance Charter"],
+    notes: "Legal name chosen to avoid signaling AGI mission prematurely during stealth phase."
+  },
+  {
+    id: 11, title: "Bylaws — STK Commons Co", filename: "bylaws_stk_commons.docx",
+    category: "organizational", date: "2026-02", status: "complete", distribution: "board",
+    summary: "Operational governance document for STK Commons Co. Establishes board structure, officer roles, meeting procedures, and amendment processes.",
+    contents: "Board composition and terms; officer roles and responsibilities; meeting procedures; quorum requirements; amendment process; conflict of interest policy",
+    sources: ["Colorado nonprofit governance standards", "Model nonprofit bylaws", "IRS governance requirements"],
+    pillars: ["Governance Charter"],
+    notes: "Greystoke chairs for three years then transitions. Board recruitment sequence: Legal first, then Practitioner, Economic Architect, Voice from the Ground, Intellectual Anchor last."
+  },
+  {
+    id: 12, title: "Founding Prospectus", filename: "agi_commons_prospectus.docx",
+    category: "organizational", date: "2026-03", status: "complete", distribution: "controlled",
+    summary: "Comprehensive organizational prospectus naming Stephen Thomas King as Founding Chair. Presents the mission, intellectual framework, organizational structure, and stealth phase strategy to prospective board members and funders.",
+    contents: "Founding vision; Greystoke biography and founding rationale; organizational structure; three-year stealth phase plan; board composition strategy; funding model",
+    sources: ["AGI Commons Manifesto", "Colorado Articles of Incorporation", "Bylaws"],
+    pillars: ["AI Dividend", "Governance Charter", "Automation Tax", "Civic Infrastructure", "Country Readiness", "Climate Governance"],
+    notes: "Biography correctly reflects background as community and agricultural banker and licensed stockbroker with Merrill Lynch and Charles Schwab — not 'Merrill Lynch banker.'"
+  },
+  {
+    id: 13, title: "Board Profiles — Five Seat Profiles", filename: "board_profiles.docx",
+    category: "organizational", date: "2026-03", status: "complete", distribution: "board",
+    summary: "Detailed profiles for five board seats including target candidates. Timothy Snyder (Yale historian) as target Intellectual Anchor; Ken Salazar as target Legal and Governance Anchor.",
+    contents: "Five seat profiles: Legal and Governance Anchor, Practitioner, Economic Architect, Voice from the Ground, Intellectual Anchor; target candidate profiles; recruitment sequence rationale",
+    sources: ["Timothy Snyder, On Freedom", "Ken Salazar public record", "Board governance best practices"],
+    pillars: ["Governance Charter"],
+    notes: "Recruitment sequence: Legal first (Salazar approach via cold letter), then Practitioner, Economic Architect, Voice from the Ground, Intellectual Anchor last. Dr. Ed Cooper (Salida) under consideration — international development, Peace Corps, Chaffee County Community Foundation founder."
+  },
+  {
+    id: 14, title: "Controlled Dissemination Strategy", filename: "dissemination_strategy.docx",
+    category: "organizational", date: "2026-03", status: "complete", distribution: "board",
+    summary: "Strategic plan for controlled distribution of founding package documents during the three-year stealth phase. Defines who receives what, when, and under what conditions.",
+    contents: "Distribution tiers; stealth phase rationale; document release sequence; coalition affiliate disclosure terms; public launch triggers",
+    sources: ["AGI Commons Manifesto", "Founding Prospectus"],
+    pillars: ["Governance Charter"],
+    notes: "All documents in this catalog are subject to this strategy unless marked otherwise."
+  },
+  {
+    id: 15, title: "AGI Commons Coalition Framework: An Invitation to Build Together", filename: "coalition_framework.docx",
+    category: "coalition", date: "2026-06", status: "complete", distribution: "controlled",
+    summary: "The primary coalition outreach and affiliation document. Seven sections covering the Shared Conviction, Six Pillars mapped to natural affiliates, Why Together rationale, three affiliation tiers, Living Framework Commitment, stealth phase terms, and closing in Greystoke's voice.",
+    contents: "I. The Shared Conviction; II. Six Pillars table with natural affiliates; III. Why Together Rather Than Separately; IV. Three Affiliation Tiers (Framework Affiliate, Contributing Partner, Anchor Institution); V. Living Framework Commitment; VI. Stealth Phase terms; VII. The Invitation",
+    sources: ["AGI Commons Manifesto", "Coalition governance literature", "Geopolitical Postscript 2026"],
+    pillars: ["AI Dividend", "Governance Charter", "Automation Tax", "Civic Infrastructure", "Country Readiness", "Climate Governance"],
+    notes: "Coalition strategy is a gravity well — STK Commons builds a framework that is right rather than first, waiting fully formed for moral-based governments that develop political will. First outreach: Dr. Ed Cooper (Salida)."
+  },
+  {
+    id: 16, title: "Film Treatment: Whose Intelligence Is It?", filename: "film_treatment.docx",
+    category: "media", date: "2026-04", status: "complete", distribution: "controlled",
+    summary: "Feature documentary film treatment presenting the AGI Commons framework through narrative. Designed to reach general audiences beyond policy and academic circles.",
+    contents: "Treatment narrative; character profiles; structural arc; distribution strategy notes",
+    sources: ["AGI Commons Manifesto", "Documentary film treatment conventions"],
+    pillars: ["AI Dividend", "Civic Infrastructure"],
+    notes: "Part of the broader media strategy for public engagement post-stealth phase."
+  },
+  {
+    id: 17, title: "Documentary Strategy", filename: "documentary_strategy.docx",
+    category: "media", date: "2026-04", status: "complete", distribution: "controlled",
+    summary: "Strategic plan for documentary film development, production partnerships, distribution, and audience engagement in support of the AGI Commons mission.",
+    contents: "Production partnership targets; distribution channels; audience segmentation; timeline relative to stealth phase; funding sources",
+    sources: ["Film Treatment: Whose Intelligence Is It?", "Documentary distribution landscape research"],
+    pillars: ["Civic Infrastructure"],
+    notes: "Coordinates with post-stealth phase public launch timeline."
+  },
+  {
+    id: 18, title: "Genealogy AI Agent — King Family Line", filename: "genealogy_agent.py",
+    category: "other", date: "2026-05", status: "complete", distribution: "controlled",
+    summary: "Python script designed to search FamilySearch for the common ancestor between Stephen Thomas King's King family line and Dr. Martin Luther King Jr.'s line. Research concluded: the lines do not converge. Both trace to English ancestry but through different branches.",
+    contents: "FamilySearch API integration; King family tree search logic; MLK Jr. genealogical line data; comparison algorithm",
+    sources: ["FamilySearch genealogical database", "King family records", "MLK Jr. genealogical research (public record)", "William R. de Greystoke King (born England c.1550) research"],
+    pillars: [],
+    notes: "Research concluded June 2026. Lines do not converge. MLK Jr.'s genealogy traces deeper English and royal ancestry. Greystoke's line similarly reaches England but through different branches."
+  },
+  {
+    id: 19, title: "Bulgarian Translation — AGI Commons Manifesto", filename: "agi_commons_manifesto_bg.docx",
+    category: "other", date: "2026-04", status: "complete", distribution: "controlled",
+    summary: "Bulgarian language translation of the AGI Commons Manifesto. Part of international coalition-building strategy, particularly relevant given Greystoke's Peace Corps service in Stara Zagora, Bulgaria (1992–93).",
+    contents: "Full Bulgarian translation of AGI Commons Manifesto",
+    sources: ["AGI Commons Manifesto (source document)", "Greystoke's Bulgarian language background"],
+    pillars: ["AI Dividend", "Governance Charter", "Automation Tax", "Civic Infrastructure", "Country Readiness", "Climate Governance"],
+    notes: "Russian and Polish translations pending."
+  },
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let docs = [];
+let currentFilter = 'all';
+let expandedId = null;
+let editingId = null;
+
+function loadDocs() {
+  try {
+    const saved = localStorage.getItem('stk_commons_catalog');
+    if (saved) {
+      docs = JSON.parse(saved);
+    } else {
+      docs = INITIAL_DOCS.map(d => ({...d}));
+      saveDocs();
+    }
+  } catch(e) {
+    docs = INITIAL_DOCS.map(d => ({...d}));
+  }
+}
+
+function saveDocs() {
+  try { localStorage.setItem('stk_commons_catalog', JSON.stringify(docs)); } catch(e) {}
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function setFilter(cat) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.cat === cat);
+  });
+  renderDocs();
+}
+
+function renderDocs() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = docs.filter(d => {
+    const catMatch = currentFilter === 'all' || d.category === currentFilter;
+    const qMatch = !q || [d.title, d.filename, d.summary, d.contents, d.notes, ...(d.sources||[]), ...(d.pillars||[])]
+      .join(' ').toLowerCase().includes(q);
+    return catMatch && qMatch;
+  });
+
+  // Update counts
+  document.getElementById('count-all').textContent = docs.length;
+  Object.keys(CAT).forEach(cat => {
+    const el = document.getElementById('count-' + cat);
+    if (el) el.textContent = docs.filter(d => d.category === cat).length;
+  });
+
+  // Stats
+  document.getElementById('stat-total').textContent = docs.length;
+  document.getElementById('stat-complete').textContent = docs.filter(d => d.status === 'complete').length;
+  const allSources = docs.flatMap(d => d.sources || []);
+  document.getElementById('stat-sources').textContent = allSources.length;
+  document.getElementById('stat-cats').textContent = [...new Set(docs.map(d => d.category))].length;
+
+  // Content title
+  const catLabel = currentFilter === 'all' ? 'All Documents' : CAT[currentFilter]?.label;
+  document.getElementById('contentTitle').textContent = catLabel;
+  document.getElementById('contentCount').textContent = `${filtered.length} document${filtered.length !== 1 ? 's' : ''}`;
+
+  const list = document.getElementById('docList');
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><div class="empty-text">No documents match your search.</div></div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(d => renderCard(d)).join('');
+}
+
+function renderCard(d) {
+  const cat = CAT[d.category] || CAT.other;
+  const status = STATUS[d.status] || STATUS.complete;
+  const dist = DIST[d.distribution] || DIST.controlled;
+  const isExp = expandedId === d.id;
+  const dateStr = d.date ? new Date(d.date + '-01').toLocaleDateString('en-US', {month:'long', year:'numeric'}) : '';
+
+  const sourcesHtml = (d.sources||[]).map(s => `<li>${s}</li>`).join('');
+  const pillarsHtml = (d.pillars||[]).map(p => `<span class="pillar-tag">${p}</span>`).join('');
+
+  return `
+  <div class="doc-card ${isExp ? 'expanded' : ''}" id="card-${d.id}">
+    <div class="doc-card-top">
+      <div class="doc-icon" style="background:${cat.bg}">${cat.icon}</div>
+      <div class="doc-meta">
+        <div class="doc-title">${d.title}</div>
+        <div class="doc-badges">
+          <span class="badge" style="background:${cat.bg};color:${cat.color}">${cat.label}</span>
+          <span class="badge" style="background:${status.bg};color:${status.color}">${status.label}</span>
+          <span class="badge" style="background:${dist.bg};color:${dist.color}">${dist.label}</span>
+          ${dateStr ? `<span class="badge" style="background:#F5F5F5;color:#5A5A5A">${dateStr}</span>` : ''}
+        </div>
+        ${d.filename ? `<div class="doc-filename">${d.filename}</div>` : ''}
+      </div>
+      <button class="doc-expand-btn" onclick="toggleCard(${d.id})">${isExp ? '▲' : '▼'}</button>
+    </div>
+    ${d.summary ? `<div class="doc-summary">${d.summary}</div>` : ''}
+    <div class="doc-detail">
+      ${d.contents ? `
+        <div class="detail-section">
+          <div class="detail-label">Contents & Sections</div>
+          <div class="detail-text">${d.contents}</div>
+        </div>` : ''}
+      ${(d.sources||[]).length ? `
+        <div class="detail-section">
+          <div class="detail-label">Source Material</div>
+          <ul class="source-list">${sourcesHtml}</ul>
+        </div>` : ''}
+      ${(d.pillars||[]).length ? `
+        <div class="detail-section">
+          <div class="detail-label">Framework Pillars</div>
+          <div class="pillar-tags">${pillarsHtml}</div>
+        </div>` : ''}
+      ${d.notes ? `
+        <div class="detail-section">
+          <div class="detail-label">Notes</div>
+          <div class="detail-text">${d.notes}</div>
+        </div>` : ''}
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-ghost btn-sm" style="background:#F0F0F0;color:#333;border:1px solid #DDD" onclick="editDoc(${d.id})">Edit</button>
+        <button class="btn btn-sm" style="background:#FAECEC;color:#8B1A1A;border:1px solid #F0CCCC" onclick="deleteDoc(${d.id})">Delete</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function toggleCard(id) {
+  expandedId = expandedId === id ? null : id;
+  renderDocs();
+}
+
+// ── MODAL ────────────────────────────────────────────────────────────────────
+function openModal(prefill) {
+  editingId = prefill ? prefill.id : null;
+  const m = document.getElementById('modalOverlay');
+  m.classList.add('open');
+  if (prefill) {
+    document.getElementById('f-title').value = prefill.title || '';
+    document.getElementById('f-filename').value = prefill.filename || '';
+    document.getElementById('f-category').value = prefill.category || 'manifesto';
+    document.getElementById('f-date').value = prefill.date || '2026-06';
+    document.getElementById('f-status').value = prefill.status || 'complete';
+    document.getElementById('f-distribution').value = prefill.distribution || 'controlled';
+    document.getElementById('f-summary').value = prefill.summary || '';
+    document.getElementById('f-contents').value = prefill.contents || '';
+    document.getElementById('f-sources').value = (prefill.sources||[]).join('\n');
+    document.getElementById('f-pillars').value = (prefill.pillars||[]).join(', ');
+    document.getElementById('f-notes').value = prefill.notes || '';
+  } else {
+    ['f-title','f-filename','f-summary','f-contents','f-sources','f-pillars','f-notes'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('f-category').value = 'manifesto';
+    document.getElementById('f-date').value = '2026-06';
+    document.getElementById('f-status').value = 'complete';
+    document.getElementById('f-distribution').value = 'controlled';
+  }
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  editingId = null;
+}
+
+function saveDocument() {
+  const title = document.getElementById('f-title').value.trim();
+  if (!title) { showToast('Title is required'); return; }
+
+  const sources = document.getElementById('f-sources').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const pillars = document.getElementById('f-pillars').value.split(',').map(s=>s.trim()).filter(Boolean);
+
+  if (editingId) {
+    const idx = docs.findIndex(d => d.id === editingId);
+    if (idx >= 0) {
+      docs[idx] = { ...docs[idx],
+        title, filename: document.getElementById('f-filename').value.trim(),
+        category: document.getElementById('f-category').value,
+        date: document.getElementById('f-date').value,
+        status: document.getElementById('f-status').value,
+        distribution: document.getElementById('f-distribution').value,
+        summary: document.getElementById('f-summary').value.trim(),
+        contents: document.getElementById('f-contents').value.trim(),
+        sources, pillars,
+        notes: document.getElementById('f-notes').value.trim(),
+      };
+    }
+    showToast('Document updated');
+  } else {
+    const newDoc = {
+      id: Date.now(), title,
+      filename: document.getElementById('f-filename').value.trim(),
+      category: document.getElementById('f-category').value,
+      date: document.getElementById('f-date').value,
+      status: document.getElementById('f-status').value,
+      distribution: document.getElementById('f-distribution').value,
+      summary: document.getElementById('f-summary').value.trim(),
+      contents: document.getElementById('f-contents').value.trim(),
+      sources, pillars,
+      notes: document.getElementById('f-notes').value.trim(),
+    };
+    docs.push(newDoc);
+    showToast('Document added');
+  }
+
+  saveDocs();
+  closeModal();
+  renderDocs();
+}
+
+function editDoc(id) {
+  const doc = docs.find(d => d.id === id);
+  if (doc) openModal(doc);
+}
+
+function deleteDoc(id) {
+  if (!confirm('Delete this document from the catalog?')) return;
+  docs = docs.filter(d => d.id !== id);
+  if (expandedId === id) expandedId = null;
+  saveDocs();
+  renderDocs();
+  showToast('Document removed');
+}
+
+// ── EXPORT ───────────────────────────────────────────────────────────────────
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(docs, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'stk_commons_catalog_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  showToast('Catalog exported');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Close modal on overlay click
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+loadDocs();
+renderDocs();
+</script>
+</body>
+</html>
